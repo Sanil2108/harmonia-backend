@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="harmonia-backend-v1" target="1.5" />
+      <module name="harmonia-backend-v1" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

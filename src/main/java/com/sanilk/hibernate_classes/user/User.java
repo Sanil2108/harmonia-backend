@@ -1,4 +1,4 @@
-package com.sanilk.hibernate_classes;
+package com.sanilk.hibernate_classes.user;
 
 import javax.persistence.*;
 
