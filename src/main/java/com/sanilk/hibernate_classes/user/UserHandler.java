@@ -50,7 +50,10 @@ public class UserHandler {
         session.getTransaction().commit();
         session.close();
 
-        return users.get(0);
+        if(users.size()>0) {
+            return users.get(0);
+        }
+        return null;
     }
 
     public User getUser(int id){
