@@ -1,5 +1,7 @@
 package com.sanilk.requests;
 
+import com.sun.org.apache.regexp.internal.RE;
+
 import java.util.Arrays;
 
 public class CreatePlaylistRequest extends MyRequest{
@@ -8,16 +10,12 @@ public class CreatePlaylistRequest extends MyRequest{
     public static final String USER_NAME_KEY="user_name";
     public static final String SONGS_COUNT="songs_count";
     public static final String SONGS_KEY="songs";
+    public static final String PLAYLIST_NAME_KEY="playlist_name";
 
     private String userName;
     private Song[] songs;
     private int songsCount;
-
-    public CreatePlaylistRequest(String userName, Song[] songs, int songsCount) {
-        this.userName = userName;
-        this.songs = songs;
-        this.songsCount = songsCount;
-    }
+    private String playlistName;
 
     @Override
     public String toString() {
@@ -25,7 +23,24 @@ public class CreatePlaylistRequest extends MyRequest{
                 "userName='" + userName + '\'' +
                 ", songs=" + Arrays.toString(songs) +
                 ", songsCount=" + songsCount +
+                ", playlistName='" + playlistName + '\'' +
                 '}';
+    }
+
+    public CreatePlaylistRequest(String userName, Song[] songs, int songsCount, String playlistName) {
+        this.userName = userName;
+        this.songs = songs;
+        this.songsCount = songsCount;
+        this.playlistName = playlistName;
+        requestType=REQUEST_TYPE;
+    }
+
+    public String getPlaylistName() {
+        return playlistName;
+    }
+
+    public void setPlaylistName(String playlistName) {
+        this.playlistName = playlistName;
     }
 
     public String getUserName() {
@@ -55,7 +70,7 @@ public class CreatePlaylistRequest extends MyRequest{
     public static class Song{
         public static final String LINK_KEY="link";
         public static final String NAME_KEY="name";
-        public static final String GENRES_KEY="genres";
+        public static final String GENRES_KEY="genre";
         public static final String ARTIST_KEY="artist";
         public static final String GENRES_COUNT_KEY="genres_count";
 
@@ -70,7 +85,7 @@ public class CreatePlaylistRequest extends MyRequest{
             return "Song{" +
                     "link='" + link + '\'' +
                     ", name='" + name + '\'' +
-                    ", genres=" + Arrays.toString(genres) +
+                    ", genre=" + Arrays.toString(genres) +
                     ", artist='" + artist + '\'' +
                     ", genresCount=" + genresCount +
                     '}';

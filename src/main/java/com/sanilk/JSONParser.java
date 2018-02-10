@@ -45,6 +45,7 @@ public class JSONParser {
     private CreatePlaylistRequest parseCreatePlaylistRequest(JSONObject jsonObject){
         String username=jsonObject.getString(CreatePlaylistRequest.USER_NAME_KEY);
         int songsCount=jsonObject.getInt(CreatePlaylistRequest.SONGS_COUNT);
+        String playlistName=jsonObject.getString(CreatePlaylistRequest.PLAYLIST_NAME_KEY);
         JSONArray songs=jsonObject.getJSONArray(CreatePlaylistRequest.SONGS_KEY);
         CreatePlaylistRequest.Song[] songsArr=new CreatePlaylistRequest.Song[songsCount];
         for(int i=0;i<songs.length();i++){
@@ -53,7 +54,7 @@ public class JSONParser {
             songsArr[i]=song;
         }
 
-        return new CreatePlaylistRequest(username, songsArr, songsCount);
+        return new CreatePlaylistRequest(username, songsArr, songsCount, playlistName);
     }
 
     private CreatePlaylistRequest.Song parseSong(JSONObject jsonObject){

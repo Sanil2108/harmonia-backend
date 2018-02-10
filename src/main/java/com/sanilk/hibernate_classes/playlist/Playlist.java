@@ -18,12 +18,13 @@ public class Playlist {
     private String genres;
     private int points;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(
-            name = "PLAYLIST_SONG",
-            joinColumns = { @JoinColumn(name = "playlistId") },
-            inverseJoinColumns = {@JoinColumn(name = "songId")}
-    )
+//    @ManyToMany(cascade = {CascadeType.ALL})
+//    @JoinTable(
+//            name = "PLAYLIST_SONG",
+//            joinColumns = { @JoinColumn(name = "playlistId") },
+//            inverseJoinColumns = {@JoinColumn(name = "songId")}
+//    )
+    @OneToMany(mappedBy = "playlist")
     public Set<Song> songSet;
 
     @Override
@@ -31,7 +32,7 @@ public class Playlist {
         return "Playlist{" +
                 "name='" + name + '\'' +
                 ", playlistId=" + playlistId +
-                ", genres='" + genres + '\'' +
+                ", genre='" + genres + '\'' +
                 ", points=" + points +
                 '}';
     }
@@ -66,6 +67,13 @@ public class Playlist {
 
     public void setPoints(int points) {
         this.points = points;
+    }
+
+    public Playlist(String name, String genres, int points, Set<Song> songSet) {
+        this.name = name;
+        this.genres = genres;
+        this.points = points;
+        this.songSet = songSet;
     }
 
     public Playlist(String name, String genres, int points) {

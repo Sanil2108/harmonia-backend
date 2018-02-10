@@ -1,8 +1,10 @@
 package com.sanilk.hibernate_classes.song;
 
+import com.sanilk.hibernate_classes.genre.Genre;
 import com.sanilk.hibernate_classes.playlist.Playlist;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -10,31 +12,36 @@ import java.util.Set;
 public class Song {
     private String name;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int songId;
+    @Column(name="songId")
+    private String songId;
     private String artist;
 
-    @ManyToMany(mappedBy = "songSet")
-    public Set<Playlist> playlists;
+    @ManyToOne
+    @JoinColumn(
+            name="playlistId", nullable = false
+    )
+    public Playlist playlist;
+
+    @OneToMany(mappedBy = "song")
+    public Set<Genre> genres;
 
     @Override
     public String toString() {
         return "Song{" +
                 "name='" + name + '\'' +
-                ", songId=" + songId +
+                ", songId='" + songId + '\'' +
                 ", artist='" + artist + '\'' +
+                ", playlist=" + playlist +
+                ", genres=" + genres +
                 '}';
     }
 
-    public Song(int songId, String name, String artist) {
+    public Song(String name, String songId, String artist, Playlist playlist, Set<Genre> genres) {
         this.name = name;
+        this.songId = songId;
         this.artist = artist;
-        this.songId=songId;
-    }
-
-    public Song(String name, String artist) {
-        this.name = name;
-        this.artist = artist;
+        this.playlist = playlist;
+        this.genres = genres;
     }
 
     public String getName() {
@@ -45,11 +52,11 @@ public class Song {
         this.name = name;
     }
 
-    public int getSongId() {
+    public String getSongId() {
         return songId;
     }
 
-    public void setSongId(int songId) {
+    public void setSongId(String songId) {
         this.songId = songId;
     }
 

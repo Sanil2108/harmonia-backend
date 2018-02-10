@@ -1,6 +1,8 @@
 package com.sanilk;
 
+import com.sanilk.hibernate_classes.genre.Genre;
 import com.sanilk.hibernate_classes.playlist.Playlist;
+import com.sanilk.hibernate_classes.playlist.PlaylistHandler;
 import com.sanilk.hibernate_classes.song.Song;
 import com.sanilk.hibernate_classes.song.SongHandler;
 import com.sanilk.hibernate_classes.user.User;
@@ -19,7 +21,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import org.json.JSONObject;
 
 
@@ -33,8 +38,6 @@ public class MainServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        UserHandler userHandler=new UserHandler();
-
         JSONParser jsonParser=new JSONParser();
 
         String requestText=new DataInputStream(req.getInputStream()).readUTF();
@@ -42,6 +45,8 @@ public class MainServlet extends HttpServlet {
         DataOutputStream dos=new DataOutputStream(resp.getOutputStream());
         switch (request.requestType){
             case CreateUserRequest.REQUEST_TYPE:
+
+                UserHandler userHandler=new UserHandler();
                 CreateUserRequest createUserRequest=(CreateUserRequest)request;
                 userHandler.saveUser(new User(createUserRequest.getUserName(),
                         createUserRequest.getPassword(),
@@ -71,7 +76,8 @@ public class MainServlet extends HttpServlet {
                 authJSONObject.put("error_code", -1);
                 authJSONObject.put("error_details", "none");
 
-                User user=userHandler.getUser(authenticateRequest.getUserName());
+                UserHandler userHandler2=new UserHandler();
+                User user=userHandler2.getUser(authenticateRequest.getUserName());
                 if(user!=null && user.getPassword().equals(authenticateRequest.getPassword())){
                     authJSONObject.put("authentic", true);
                 }else{
@@ -86,6 +92,41 @@ public class MainServlet extends HttpServlet {
             case CreatePlaylistRequest.REQUEST_TYPE:
                 CreatePlaylistRequest createPlaylistRequest=(CreatePlaylistRequest)request;
 
+                PlaylistHandler playlistHandler=new PlaylistHandler();
+
+                String playlistName=createPlaylistRequest.getPlaylistName();
+                String genres="temp_genres";
+                int points=-1;
+
+                Set<Song> songsArr=new HashSet<>();
+                CreatePlaylistRequest.Song[] songs=createPlaylistRequest.getSongs();
+
+                Playlist playlist=new Playlist(playlistName, genres, points, null);
+
+                for(int i=0;i<songs.length;i++){
+                    String tempName=songs[i].getName();
+                    String tempArtist=songs[i].getArtist();
+                    String id=songs[i].getLink();
+                    Song temp=new Song(tempName, id, tempArtist, playlist, null);
+
+                    Set<Genre> genresArr=new HashSet<>();
+                    CreatePlaylistRequest.Song.Genre[] tempGenres=
+                             songs[i].getGenres();
+                    for(int j=0;j<tempGenres.length;j++){
+                        Genre temptempgenre=new Genre(
+                                tempGenres[j].getName(),
+                                temp
+                        );
+                        genresArr.add(temptempgenre);
+                    }
+
+                    temp.genres=genresArr;
+                    songsArr.add(temp);
+                }
+
+                playlist.songSet=songsArr;
+                playlistHandler.savePlaylist(playlist);
+
                 JSONObject createPlaylistJSONObject=new JSONObject();
                 //Write response here
 
@@ -94,19 +135,30 @@ public class MainServlet extends HttpServlet {
 
                 break;
 
-            case NewSongRequest.REQUEST_TYPE:
-                NewSongRequest newSongRequest=(NewSongRequest)request;
-
-                JSONObject newSongJSONObject=new JSONObject();
-
-                SongHandler songHandler=new SongHandler();
-                songHandler.saveSong(new Song(
-                        newSongRequest.getName(),
-                        newSongRequest.getArtist()
-                ));
-
-                dos.writeUTF(newSongJSONObject.toString());
-                break;
+//            case NewSongRequest.REQUEST_TYPE:
+//                NewSongRequest newSongRequest=(NewSongRequest)request;
+//
+//                JSONObject newSongJSONObject=new JSONObject();
+//
+//                SongHandler songHandler=new SongHandler();
+//
+//                HashSet<Genre> genres2=new HashSet<>();
+//                for(NewSongRequest.Genre g:newSongRequest.getGenres()) {
+//                    Genre g2=new Genre(g.getName(), s);
+//                    genres2.add(g2);
+//                }
+//                Song s=new Song(
+//                        newSongRequest.getName(),
+//                        newSongRequest.getId(),
+//                        newSongRequest.getArtist(),
+//                        playlist,
+//                        genres2
+//                );
+//                s.genres=genres2;
+//                songHandler.saveSong(s);
+//
+//                dos.writeUTF(newSongJSONObject.toString());
+//                break;
         }
     }
 }

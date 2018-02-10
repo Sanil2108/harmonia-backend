@@ -37,7 +37,7 @@ public class NewSongRequest extends MyRequest{
                 ", id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", artist='" + artist + '\'' +
-                ", genres=" + Arrays.toString(genres) +
+                ", genre=" + Arrays.toString(genres) +
                 '}';
     }
 
