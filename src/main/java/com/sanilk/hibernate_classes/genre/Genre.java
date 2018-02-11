@@ -18,7 +18,7 @@ public class Genre {
 
     @ManyToOne
     @JoinColumn(
-            name = "songId", nullable = false
+            name = "songId", nullable = true
     )
     private Song song;
 

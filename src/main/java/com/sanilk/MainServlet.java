@@ -101,13 +101,13 @@ public class MainServlet extends HttpServlet {
                 Set<Song> songsArr=new HashSet<>();
                 CreatePlaylistRequest.Song[] songs=createPlaylistRequest.getSongs();
 
-                Playlist playlist=new Playlist(playlistName, genres, points, null);
+                Playlist playlist=new Playlist(playlistName, genres, points, new HashSet<>());
 
                 for(int i=0;i<songs.length;i++){
                     String tempName=songs[i].getName();
                     String tempArtist=songs[i].getArtist();
                     String id=songs[i].getLink();
-                    Song temp=new Song(tempName, id, tempArtist, playlist, null);
+                    Song temp=new Song(tempName, id, tempArtist, playlist, new HashSet<>());
 
                     Set<Genre> genresArr=new HashSet<>();
                     CreatePlaylistRequest.Song.Genre[] tempGenres=

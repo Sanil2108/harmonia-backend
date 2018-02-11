@@ -18,7 +18,7 @@ public class Song {
 
     @ManyToOne
     @JoinColumn(
-            name="playlistId", nullable = false
+            name="playlistId", nullable = true
     )
     public Playlist playlist;
 
