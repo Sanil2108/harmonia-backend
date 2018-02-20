@@ -1,5 +1,6 @@
 package com.sanilk.hibernate_classes.playlist;
 
+import com.sanilk.hibernate_classes.comment.Comment;
 import com.sanilk.hibernate_classes.song.Song;
 
 import javax.persistence.*;
@@ -24,8 +25,14 @@ public class Playlist {
 //            joinColumns = { @JoinColumn(name = "playlistId") },
 //            inverseJoinColumns = {@JoinColumn(name = "songId")}
 //    )
-    @OneToMany(mappedBy = "playlist")
+
+    public Playlist(){}
+
+    @OneToMany(mappedBy = "playlist", fetch = FetchType.EAGER)
     public Set<Song> songSet;
+
+    @OneToMany(mappedBy = "playlist", fetch = FetchType.EAGER)
+    public Set<Comment> comments;
 
     @Override
     public String toString() {

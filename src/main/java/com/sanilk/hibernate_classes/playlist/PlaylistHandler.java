@@ -12,6 +12,7 @@ import org.hibernate.service.ServiceRegistry;
 
 import javax.persistence.Query;
 import java.util.List;
+import java.util.Random;
 
 public class PlaylistHandler {
     SessionFactory sessionFactory;
@@ -26,6 +27,27 @@ public class PlaylistHandler {
                 .applySettings(configuration.getProperties())
                 .build();
         sessionFactory=configuration.buildSessionFactory(standardServiceRegistry);
+    }
+
+    public Playlist getRandomPlaylist(){
+        Session session=sessionFactory.openSession();
+        session.beginTransaction();
+
+        Query query=session.createQuery("from com.sanilk.hibernate_classes.playlist.Playlist");
+        List<Playlist> playlists=query.getResultList();
+
+        if(playlists.size()==0){
+            return null;
+        }
+
+        Random random=new Random();
+        int r=random.nextInt(playlists.size());
+        Playlist finalPlaylistSelected=playlists.get(r);
+
+        session.getTransaction().commit();
+        session.close();
+
+        return finalPlaylistSelected;
     }
 
     public void savePlaylist(Playlist p){

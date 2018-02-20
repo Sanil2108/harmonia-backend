@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 
@@ -132,6 +133,56 @@ public class MainServlet extends HttpServlet {
 
                 String createPlaylistResponse=createPlaylistJSONObject.toString();
                 dos.writeUTF(createPlaylistResponse);
+
+                break;
+
+
+            case GetRandomPlaylistRequest.REQUEST_TYPE:
+                GetRandomPlaylistRequest getRandomPlaylistRequest=
+                        (GetRandomPlaylistRequest)request;
+
+                PlaylistHandler playlistHandlerForRandomPlaylist=new PlaylistHandler();
+                Playlist randomPlaylist=playlistHandlerForRandomPlaylist
+                        .getRandomPlaylist();
+
+                if(randomPlaylist!=null) {
+
+                    JSONObject jsonResponseForRandomPlaylist = new JSONObject();
+                    jsonResponseForRandomPlaylist.put("response_type", "GET_RANDOM_PLAYLIST_RESPONSE");
+                    jsonResponseForRandomPlaylist.put("upvotes", 10);
+                    jsonResponseForRandomPlaylist.put("downvotes", 1);
+                    jsonResponseForRandomPlaylist.put("username", "[username]");
+                    jsonResponseForRandomPlaylist.put("name", randomPlaylist.getName());
+                    jsonResponseForRandomPlaylist.put("songs_count", randomPlaylist.songSet.size());
+
+                    JSONArray allSongsArray = new JSONArray();
+                    for (Song s : randomPlaylist.songSet) {
+                        JSONObject tempObject = new JSONObject();
+                        tempObject.put("link", s.getSongId());
+                        tempObject.put("name", s.getName());
+                        tempObject.put("artist", s.getArtist());
+                        tempObject.put("genres_count", s.genres.size());
+
+                        JSONArray allGenresArray = new JSONArray();
+                        for (Genre g : s.genres) {
+                            JSONObject temptempObject = new JSONObject();
+                            temptempObject.put("name", g.getName());
+
+                            allGenresArray.put(temptempObject);
+                        }
+
+                        tempObject.put("genres", allGenresArray);
+                        allSongsArray.put(tempObject);
+                    }
+
+                    jsonResponseForRandomPlaylist.put("songs", allSongsArray);
+
+                    //Add stuff for comments
+                    dos.writeUTF(jsonResponseForRandomPlaylist.toString());
+
+                }else{
+                    dos.writeUTF("No playlists");
+                }
 
                 break;
 

@@ -20,6 +20,8 @@ public class JSONParser {
                 return parseCreatePlaylistRequest(jsonObject);
             case NewSongRequest.REQUEST_TYPE:
                 return parseNewSongRequest(jsonObject);
+            case GetRandomPlaylistRequest.REQUEST_TYPE:
+                return parseGetRandomPlaylistRequest(jsonObject);
             default:
                 return null;
         }
@@ -100,6 +102,17 @@ public class JSONParser {
     private NewSongRequest.Genre parseNewSongRequestGenre(JSONObject jsonObject){
         String name=jsonObject.getString(NewSongRequest.Genre.NAME_KEY);
         return new NewSongRequest.Genre(name);
+    }
+
+    private GetRandomPlaylistRequest parseGetRandomPlaylistRequest(JSONObject jsonObject){
+        int genresCount=jsonObject.getInt(GetRandomPlaylistRequest.GENRES_COUNT_KEY);
+        JSONArray genresJSONArray=jsonObject.getJSONArray(GetRandomPlaylistRequest.GENRES_KEY);
+        String[] genres=new String[genresJSONArray.length()];
+        for(int i=0;i<genresJSONArray.length();i++){
+            genres[i]=(String)genresJSONArray.get(i);
+        }
+
+        return new GetRandomPlaylistRequest(genres, genresCount);
     }
 
 }

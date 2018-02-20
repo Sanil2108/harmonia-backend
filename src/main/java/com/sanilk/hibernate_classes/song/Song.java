@@ -1,5 +1,6 @@
 package com.sanilk.hibernate_classes.song;
 
+import com.sanilk.hibernate_classes.comment.Comment;
 import com.sanilk.hibernate_classes.genre.Genre;
 import com.sanilk.hibernate_classes.playlist.Playlist;
 
@@ -22,8 +23,13 @@ public class Song {
     )
     public Playlist playlist;
 
-    @OneToMany(mappedBy = "song")
+    @OneToMany(mappedBy = "song", fetch = FetchType.EAGER)
     public Set<Genre> genres;
+
+    @OneToMany(mappedBy = "song", fetch = FetchType.EAGER)
+    public Set<Comment> comments;
+
+    public Song(){}
 
     @Override
     public String toString() {
