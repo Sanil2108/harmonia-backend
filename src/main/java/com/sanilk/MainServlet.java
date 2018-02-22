@@ -1,18 +1,14 @@
 package com.sanilk;
 
+import com.sanilk.hibernate_classes.comment.Comment;
+import com.sanilk.hibernate_classes.comment.CommentHandler;
 import com.sanilk.hibernate_classes.genre.Genre;
 import com.sanilk.hibernate_classes.playlist.Playlist;
 import com.sanilk.hibernate_classes.playlist.PlaylistHandler;
 import com.sanilk.hibernate_classes.song.Song;
-import com.sanilk.hibernate_classes.song.SongHandler;
 import com.sanilk.hibernate_classes.user.User;
 import com.sanilk.hibernate_classes.user.UserHandler;
 import com.sanilk.requests.*;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,10 +49,6 @@ public class MainServlet extends HttpServlet {
                 userHandler.saveUser(new User(createUserRequest.getUserName(),
                         createUserRequest.getPassword(),
                         createUserRequest.getEmail()));
-
-//                userHandler.populateList();
-//
-//                userHandler.getUser("abcd");
 
                 JSONObject jsonObject=new JSONObject();
                 jsonObject.put("response_type", "CREATE_USER_RESPONSE");
@@ -183,6 +176,59 @@ public class MainServlet extends HttpServlet {
                 }else{
                     dos.writeUTF("No playlists");
                 }
+
+                break;
+
+            case GetCommentsByPlaylistIdRequest.REQUEST_TYPE_KEY:
+                GetCommentsByPlaylistIdRequest getCommentsByPlaylistIdRequest =(GetCommentsByPlaylistIdRequest)request;
+                CommentHandler commentHandlerForGetCommentsByPlaylist=
+                        new CommentHandler();
+                List<Comment> comments=commentHandlerForGetCommentsByPlaylist.getComments(
+                        getCommentsByPlaylistIdRequest.getPlaylistId()
+                );
+
+                JSONObject responseObjectForGetComments=new JSONObject();
+                responseObjectForGetComments.put("response_type", "GET_COMMENTS_RESPONSE");
+                responseObjectForGetComments.put("playlist_id", getCommentsByPlaylistIdRequest.getPlaylistId());
+
+                JSONArray jsonArray=new JSONArray();
+                for(Comment c:comments){
+                    JSONObject jsonObjectTemp=new JSONObject();
+                    jsonObjectTemp.put("by", c.getUser().getId());
+                    jsonObjectTemp.put("text", c.getText());
+                    jsonObjectTemp.put("date", c.getDate());
+
+                    jsonArray.put(jsonObjectTemp);
+                }
+
+                responseObjectForGetComments.put("comments", jsonArray);
+
+                dos.writeUTF(
+                        responseObjectForGetComments.toString()
+                );
+
+                break;
+
+            case AddCommentRequest.REQUEST_TYPE:
+                AddCommentRequest addCommentRequest=(AddCommentRequest)request;
+
+                CommentHandler commentHandler=new CommentHandler();
+                PlaylistHandler playlistHandlerForAddingComments=new PlaylistHandler();
+                UserHandler userHandlerForAddingComments=new UserHandler();
+
+                Playlist p=playlistHandlerForAddingComments.getPlaylist(addCommentRequest.playlistId);
+                User u=userHandlerForAddingComments.getUser(addCommentRequest.username);
+
+                commentHandler.newComment(
+                        new Comment(
+                                addCommentRequest.text,
+                                new Date().toString(),
+                                p,
+                                u
+                        )
+                );
+
+                dos.writeUTF("kuch aaega yahan");
 
                 break;
 

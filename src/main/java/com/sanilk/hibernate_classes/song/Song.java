@@ -26,9 +26,6 @@ public class Song {
     @OneToMany(mappedBy = "song", fetch = FetchType.EAGER)
     public Set<Genre> genres;
 
-    @OneToMany(mappedBy = "song", fetch = FetchType.EAGER)
-    public Set<Comment> comments;
-
     public Song(){}
 
     @Override

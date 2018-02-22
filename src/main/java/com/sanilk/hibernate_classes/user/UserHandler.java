@@ -1,5 +1,9 @@
 package com.sanilk.hibernate_classes.user;
 
+import com.sanilk.hibernate_classes.comment.Comment;
+import com.sanilk.hibernate_classes.genre.Genre;
+import com.sanilk.hibernate_classes.playlist.Playlist;
+import com.sanilk.hibernate_classes.song.Song;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -18,6 +22,10 @@ public class UserHandler {
         allUsers=AllUsers.getAllUsers();
         Configuration configuration=new Configuration()
                 .configure()
+                .addAnnotatedClass(Playlist.class)
+                .addAnnotatedClass(Genre.class)
+                .addAnnotatedClass(Song.class)
+                .addAnnotatedClass(Comment.class)
                 .addAnnotatedClass(User.class);
         ServiceRegistry serviceRegistry=new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())

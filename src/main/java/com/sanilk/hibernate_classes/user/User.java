@@ -1,6 +1,9 @@
 package com.sanilk.hibernate_classes.user;
 
+import com.sanilk.hibernate_classes.comment.Comment;
+
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * Created by root on 28/1/18.
@@ -14,6 +17,9 @@ public class User {
     private int id=1;
     private String password;
     private String email;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<Comment> commentSet;
 
     public User(){}
 

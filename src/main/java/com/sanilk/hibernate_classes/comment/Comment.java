@@ -20,16 +20,22 @@ public class Comment {
     private String date;
 
     @ManyToOne
+    @JoinColumn(
+            name = "playlistId", nullable = true
+    )
     private Playlist playlist;
 
     @ManyToOne
-    private User song;
+    @JoinColumn(
+            name = "user", nullable = true
+    )
+    private User user;
 
-    public Comment(String text, String date, Playlist playlist, User song) {
+    public Comment(String text, String date, Playlist playlist, User user) {
         this.text = text;
         this.date = date;
         this.playlist = playlist;
-        this.song = song;
+        this.user = user;
     }
 
     @Override
@@ -39,7 +45,7 @@ public class Comment {
                 ", text='" + text + '\'' +
                 ", date='" + date + '\'' +
                 ", playlist=" + playlist +
-                ", song=" + song +
+                ", user=" + user +
                 '}';
     }
 
@@ -75,11 +81,11 @@ public class Comment {
         this.playlist = playlist;
     }
 
-    public User getSong() {
-        return song;
+    public User getUser() {
+        return user;
     }
 
-    public void setSong(User song) {
-        this.song = song;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

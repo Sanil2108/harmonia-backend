@@ -10,7 +10,7 @@ public class AddCommentRequest extends MyRequest {
     public static final String TEXT_KEY="text";
 
     public String username;
-    public String playlistId;
+    public int playlistId;
     public String text;
 
     public String getUsername() {
@@ -21,11 +21,11 @@ public class AddCommentRequest extends MyRequest {
         this.username = username;
     }
 
-    public String getPlaylistId() {
+    public int getPlaylistId() {
         return playlistId;
     }
 
-    public void setPlaylistId(String playlistId) {
+    public void setPlaylistId(int playlistId) {
         this.playlistId = playlistId;
     }
 
@@ -47,9 +47,11 @@ public class AddCommentRequest extends MyRequest {
                 '}';
     }
 
-    public AddCommentRequest(String username, String playlistId, String text) {
+    public AddCommentRequest(String username, int playlistId, String text) {
         this.username = username;
         this.playlistId = playlistId;
         this.text = text;
+
+        this.requestType=REQUEST_TYPE;
     }
 }

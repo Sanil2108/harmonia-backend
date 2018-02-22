@@ -19,13 +19,6 @@ public class Playlist {
     private String genres;
     private int points;
 
-//    @ManyToMany(cascade = {CascadeType.ALL})
-//    @JoinTable(
-//            name = "PLAYLIST_SONG",
-//            joinColumns = { @JoinColumn(name = "playlistId") },
-//            inverseJoinColumns = {@JoinColumn(name = "songId")}
-//    )
-
     public Playlist(){}
 
     @OneToMany(mappedBy = "playlist", fetch = FetchType.EAGER)

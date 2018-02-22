@@ -4,8 +4,6 @@ import com.sanilk.requests.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.List;
-
 public class JSONParser {
 
     public MyRequest parse(String text){
@@ -21,6 +19,10 @@ public class JSONParser {
             case NewSongRequest.REQUEST_TYPE:
                 return parseNewSongRequest(jsonObject);
             case GetRandomPlaylistRequest.REQUEST_TYPE:
+                return parseGetRandomPlaylistRequest(jsonObject);
+            case AddCommentRequest.REQUEST_TYPE:
+                return parseAddCommentRequest(jsonObject);
+            case GetCommentsByPlaylistIdRequest.REQUEST_TYPE:
                 return parseGetRandomPlaylistRequest(jsonObject);
             default:
                 return null;
@@ -113,6 +115,20 @@ public class JSONParser {
         }
 
         return new GetRandomPlaylistRequest(genres, genresCount);
+    }
+
+    private GetCommentsByPlaylistIdRequest parseGetCommentRequest(JSONObject jsonObject){
+        String playlistId=jsonObject.getString(GetCommentsByPlaylistIdRequest.PLAYLIST_ID_KEY);
+
+        return new GetCommentsByPlaylistIdRequest(playlistId);
+    }
+
+    private AddCommentRequest parseAddCommentRequest(JSONObject jsonObject){
+        int playlistId=jsonObject.getInt(AddCommentRequest.PLAYLIST_ID_KEY);
+        String username=jsonObject.getString(AddCommentRequest.USERNAME_KEY);
+        String text=jsonObject.getString(AddCommentRequest.TEXT_KEY);
+
+        return new AddCommentRequest(username, playlistId, text);
     }
 
 }
