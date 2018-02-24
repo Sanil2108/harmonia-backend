@@ -21,7 +21,12 @@ public class Playlist {
 
     public Playlist(){}
 
-    @OneToMany(mappedBy = "playlist", fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "PLAYLIST_SONG",
+            joinColumns = @JoinColumn(name = "playlistId"),
+            inverseJoinColumns = @JoinColumn(name = "songId")
+    )
     public Set<Song> songSet;
 
     @OneToMany(mappedBy = "playlist", fetch = FetchType.EAGER)

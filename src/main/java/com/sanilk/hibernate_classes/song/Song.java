@@ -17,11 +17,8 @@ public class Song {
     private String songId;
     private String artist;
 
-    @ManyToOne
-    @JoinColumn(
-            name="playlistId", nullable = true
-    )
-    public Playlist playlist;
+    @ManyToMany(mappedBy = "songSet")
+    public Set<Playlist> playlists;
 
     @OneToMany(mappedBy = "song", fetch = FetchType.EAGER)
     public Set<Genre> genres;
@@ -34,16 +31,14 @@ public class Song {
                 "name='" + name + '\'' +
                 ", songId='" + songId + '\'' +
                 ", artist='" + artist + '\'' +
-                ", playlist=" + playlist +
                 ", genres=" + genres +
                 '}';
     }
 
-    public Song(String name, String songId, String artist, Playlist playlist, Set<Genre> genres) {
+    public Song(String name, String songId, String artist, Set<Genre> genres) {
         this.name = name;
         this.songId = songId;
         this.artist = artist;
-        this.playlist = playlist;
         this.genres = genres;
     }
 

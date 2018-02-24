@@ -101,7 +101,7 @@ public class MainServlet extends HttpServlet {
                     String tempName=songs[i].getName();
                     String tempArtist=songs[i].getArtist();
                     String id=songs[i].getLink();
-                    Song temp=new Song(tempName, id, tempArtist, playlist, new HashSet<>());
+                    Song temp=new Song(tempName, id, tempArtist, new HashSet<>());
 
                     Set<Genre> genresArr=new HashSet<>();
                     CreatePlaylistRequest.Song.Genre[] tempGenres=

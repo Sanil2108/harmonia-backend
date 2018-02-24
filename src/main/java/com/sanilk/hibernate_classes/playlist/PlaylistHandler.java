@@ -58,13 +58,7 @@ public class PlaylistHandler {
 
         Session session=sessionFactory.openSession();
         Transaction t=session.beginTransaction();
-
-        for(Song s:p.songSet){
-            session.save(s);
-            for(Genre g:s.genres){
-                session.save(g);
-            }
-        }
+        
         session.save(p);
 
         t.commit();
