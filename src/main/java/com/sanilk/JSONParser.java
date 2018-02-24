@@ -23,7 +23,7 @@ public class JSONParser {
             case AddCommentRequest.REQUEST_TYPE:
                 return parseAddCommentRequest(jsonObject);
             case GetCommentsByPlaylistIdRequest.REQUEST_TYPE:
-                return parseGetRandomPlaylistRequest(jsonObject);
+                return parseGetCommentRequest(jsonObject);
             default:
                 return null;
         }
@@ -118,7 +118,7 @@ public class JSONParser {
     }
 
     private GetCommentsByPlaylistIdRequest parseGetCommentRequest(JSONObject jsonObject){
-        String playlistId=jsonObject.getString(GetCommentsByPlaylistIdRequest.PLAYLIST_ID_KEY);
+        int playlistId=jsonObject.getInt(GetCommentsByPlaylistIdRequest.PLAYLIST_ID_KEY);
 
         return new GetCommentsByPlaylistIdRequest(playlistId);
     }

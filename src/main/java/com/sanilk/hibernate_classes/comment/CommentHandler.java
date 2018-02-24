@@ -38,17 +38,18 @@ public class CommentHandler {
         Session session=sessionFactory.openSession();
         session.beginTransaction();
 
+        session.save(comment.getUser());
         session.save(comment);
 
         session.getTransaction().commit();
         session.close();
     }
 
-    public List<Comment> getComments(String playlistId){
+    public List<Comment> getComments(int playlistId){
         Session session=sessionFactory.openSession();
 
         Query query=session
-                .createQuery("from com.sanilk.hibernate_classes.comment.Comment where playlist=:p");
+                .createQuery("from com.sanilk.hibernate_classes.comment.Comment where playlistId=:p");
         query.setParameter("p", playlistId);
         List<Comment> comments=query.getResultList();
 

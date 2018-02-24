@@ -58,7 +58,7 @@ public class PlaylistHandler {
 
         Session session=sessionFactory.openSession();
         Transaction t=session.beginTransaction();
-        
+
         session.save(p);
 
         t.commit();

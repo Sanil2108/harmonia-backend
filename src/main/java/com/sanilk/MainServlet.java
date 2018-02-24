@@ -179,7 +179,7 @@ public class MainServlet extends HttpServlet {
 
                 break;
 
-            case GetCommentsByPlaylistIdRequest.REQUEST_TYPE_KEY:
+            case GetCommentsByPlaylistIdRequest.REQUEST_TYPE:
                 GetCommentsByPlaylistIdRequest getCommentsByPlaylistIdRequest =(GetCommentsByPlaylistIdRequest)request;
                 CommentHandler commentHandlerForGetCommentsByPlaylist=
                         new CommentHandler();

@@ -13,6 +13,8 @@ import javax.persistence.*;
 @Table(name="COMMENT")
 public class Comment {
 
+    public Comment(){}
+
     @Id()
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int commentId;
