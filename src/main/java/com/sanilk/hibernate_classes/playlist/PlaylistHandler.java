@@ -106,4 +106,30 @@ public class PlaylistHandler {
         return null;
     }
 
+    public void upvotePlaylist(int playlistId){
+        Playlist p=getPlaylist(playlistId);
+        p.setPoints(p.getPoints()+1);
+
+        Session session=sessionFactory.openSession();
+        session.beginTransaction();
+
+        session.update(p);
+
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public void downvotePlaylist(int playlistId){
+        Playlist p=getPlaylist(playlistId);
+        p.setPoints(p.getPoints()-1);
+
+        Session session=sessionFactory.openSession();
+        session.beginTransaction();
+
+        session.update(p);
+
+        session.getTransaction().commit();
+        session.close();
+    }
+
 }

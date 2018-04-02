@@ -1,6 +1,7 @@
 package com.sanilk.hibernate_classes.user;
 
 import com.sanilk.hibernate_classes.comment.Comment;
+import com.sanilk.hibernate_classes.playlist.Playlist;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -17,6 +18,9 @@ public class User {
     private int id=1;
     private String password;
     private String email;
+
+    @OneToMany(mappedBy = "creator")
+    private Set<Playlist> playlists;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<Comment> commentSet;
@@ -44,6 +48,22 @@ public class User {
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 '}';
+    }
+
+    public Set<Playlist> getPlaylists() {
+        return playlists;
+    }
+
+    public void setPlaylists(Set<Playlist> playlists) {
+        this.playlists = playlists;
+    }
+
+    public Set<Comment> getCommentSet() {
+        return commentSet;
+    }
+
+    public void setCommentSet(Set<Comment> commentSet) {
+        this.commentSet = commentSet;
     }
 
     public String getName() {

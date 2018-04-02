@@ -2,6 +2,7 @@ package com.sanilk.hibernate_classes.playlist;
 
 import com.sanilk.hibernate_classes.comment.Comment;
 import com.sanilk.hibernate_classes.song.Song;
+import com.sanilk.hibernate_classes.user.User;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -20,6 +21,10 @@ public class Playlist {
     private int points;
 
     public Playlist(){}
+
+    @ManyToOne()
+    @JoinColumn(name = "username", nullable = true)
+    private User creator;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
@@ -40,6 +45,30 @@ public class Playlist {
                 ", genre='" + genres + '\'' +
                 ", points=" + points +
                 '}';
+    }
+
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
+
+    public Set<Song> getSongSet() {
+        return songSet;
+    }
+
+    public void setSongSet(Set<Song> songSet) {
+        this.songSet = songSet;
+    }
+
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
     }
 
     public String getName() {

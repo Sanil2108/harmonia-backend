@@ -1,5 +1,6 @@
 package com.sanilk;
 
+import com.sanilk.hibernate_classes.playlist.Playlist;
 import com.sanilk.requests.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,9 +25,26 @@ public class JSONParser {
                 return parseAddCommentRequest(jsonObject);
             case GetCommentsByPlaylistIdRequest.REQUEST_TYPE:
                 return parseGetCommentRequest(jsonObject);
+            case PlaylistReactionRequest.REQUEST_TYPE:
+                return parsePlaylistReactionRequest(jsonObject);
+            case GetNotificationsRequest.REQUEST_TYPE:
+                return parseGetNotificationsRequest(jsonObject);
             default:
                 return null;
         }
+    }
+
+    private GetNotificationsRequest parseGetNotificationsRequest(JSONObject jsonObject){
+        String username=jsonObject.getString(GetNotificationsRequest.USERNAME_KEY);
+
+        return new GetNotificationsRequest(username);
+    }
+
+    private PlaylistReactionRequest parsePlaylistReactionRequest(JSONObject jsonObject){
+        int playlistId=jsonObject.getInt(PlaylistReactionRequest.PLAYLIST_ID_KEY);
+        String reaction=jsonObject.getString(PlaylistReactionRequest.REACTION_KEY);
+
+        return new PlaylistReactionRequest(reaction, playlistId);
     }
 
     private CreateUserRequest parseCreateUserRequest(JSONObject jsonObject){

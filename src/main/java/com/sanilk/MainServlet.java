@@ -3,6 +3,8 @@ package com.sanilk;
 import com.sanilk.hibernate_classes.comment.Comment;
 import com.sanilk.hibernate_classes.comment.CommentHandler;
 import com.sanilk.hibernate_classes.genre.Genre;
+import com.sanilk.hibernate_classes.notification.Notification;
+import com.sanilk.hibernate_classes.notification.NotificationHandler;
 import com.sanilk.hibernate_classes.playlist.Playlist;
 import com.sanilk.hibernate_classes.playlist.PlaylistHandler;
 import com.sanilk.hibernate_classes.song.Song;
@@ -95,13 +97,20 @@ public class MainServlet extends HttpServlet {
                 Set<Song> songsArr=new HashSet<>();
                 CreatePlaylistRequest.Song[] songs=createPlaylistRequest.getSongs();
 
-                Playlist playlist=new Playlist(playlistName, genres, points, new HashSet<>());
+                //Do some kind fo check to make sure songs arent repeated in db
+                Playlist playlist=new Playlist(playlistName, genres, points, new HashSet<Song>());
+                playlist.setCreator(
+                        new UserHandler().getUser(createPlaylistRequest.getUserName())
+                );
 
                 for(int i=0;i<songs.length;i++){
                     String tempName=songs[i].getName();
                     String tempArtist=songs[i].getArtist();
                     String id=songs[i].getLink();
-                    Song temp=new Song(tempName, id, tempArtist, new HashSet<>());
+                    Song temp=new Song(tempName, id, tempArtist, new HashSet<Genre>());
+                    Set<Playlist> playlists=new HashSet<>();
+                    playlists.add(playlist);
+                    temp.playlists=playlists;
 
                     Set<Genre> genresArr=new HashSet<>();
                     CreatePlaylistRequest.Song.Genre[] tempGenres=
@@ -117,6 +126,10 @@ public class MainServlet extends HttpServlet {
                     temp.genres=genresArr;
                     songsArr.add(temp);
                 }
+
+                //Handle notifications
+                NotificationHandler notificationHandler=new NotificationHandler();
+                notificationHandler.newPlaylistCreatedNotification(playlist);
 
                 playlist.songSet=songsArr;
                 playlistHandler.savePlaylist(playlist);
@@ -144,7 +157,7 @@ public class MainServlet extends HttpServlet {
                     jsonResponseForRandomPlaylist.put("response_type", "GET_RANDOM_PLAYLIST_RESPONSE");
                     jsonResponseForRandomPlaylist.put("upvotes", 10);
                     jsonResponseForRandomPlaylist.put("downvotes", 1);
-                    jsonResponseForRandomPlaylist.put("username", "[username]");
+                    jsonResponseForRandomPlaylist.put("username", randomPlaylist.getCreator().getName());
                     jsonResponseForRandomPlaylist.put("name", randomPlaylist.getName());
                     jsonResponseForRandomPlaylist.put("songs_count", randomPlaylist.songSet.size());
 
@@ -232,6 +245,36 @@ public class MainServlet extends HttpServlet {
 
                 break;
 
+            case PlaylistReactionRequest.REQUEST_TYPE:
+                PlaylistReactionRequest playlistReactionRequest=
+                        (PlaylistReactionRequest)request;
+
+                PlaylistHandler playlistHandlerForPlaylistReaction=
+                        new PlaylistHandler();
+                int playlistId=playlistReactionRequest.getPlaylistId();
+                switch (playlistReactionRequest.getReaction()){
+                    case "upvote":
+                        playlistHandlerForPlaylistReaction.upvotePlaylist(playlistId);
+                        break;
+                    case "downvote":
+                        playlistHandlerForPlaylistReaction.downvotePlaylist(playlistId);
+                        break;
+                }
+                dos.writeUTF("playlist reaction request response not done");
+                break;
+
+            case GetNotificationsRequest.REQUEST_TYPE:
+                GetNotificationsRequest getNotificationsRequest=
+                        (GetNotificationsRequest)request;
+
+                NotificationHandler notificationHandlerForGetNotification=
+                        new NotificationHandler();
+                List<Notification> notifications=notificationHandlerForGetNotification
+                        .getNotifications(getNotificationsRequest.getUsername());
+                dos.writeUTF("get notification request response not done");
+
+                break;
+
 //            case NewSongRequest.REQUEST_TYPE:
 //                NewSongRequest newSongRequest=(NewSongRequest)request;
 //
@@ -256,6 +299,8 @@ public class MainServlet extends HttpServlet {
 //
 //                dos.writeUTF(newSongJSONObject.toString());
 //                break;
+            default:
+                dos.writeUTF("Uhmm..... there was supposed to be something here. but its not right now. so... uhmm. well, this is awkward");
         }
     }
 }
